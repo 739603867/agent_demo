@@ -7,13 +7,14 @@ from langchain.agents.middleware.tool_selection import DEFAULT_SYSTEM_PROMPT
 from langchain.agents.middleware.types import ResponseT, ModelRequest, ModelResponse
 from langchain.chat_models import init_chat_model
 from langchain_core.language_models import BaseChatModel
-from langchain_core.messages import ToolMessage, HumanMessage, SystemMessage, ContentBlock
+from langchain_core.messages import ToolMessage, HumanMessage
 from langchain_core.runnables import Runnable
 from langchain_core.tools import BaseTool, StructuredTool
 from langgraph.prebuilt import ToolRuntime
 from langgraph.types import Command
 from langgraph.typing import ContextT
 from pydantic import BaseModel, Field
+from agent_demo.multi_agent_1.utils.message_utils import append_to_system_message
 
 
 class SubAgent(TypedDict):
@@ -422,22 +423,3 @@ class SubAgentMiddleware(AgentMiddleware[Any, ContextT, ResponseT]):
             new_system_message = append_to_system_message(request.system_message, self.system_prompt)
             return await handler(request.override(system_message=new_system_message))
         return await handler(request)
-
-def append_to_system_message(
-    system_message: SystemMessage | None,
-    text: str,
-) -> SystemMessage:
-    """将文本追加到系统消息中。
-
-    Args:
-        system_message: 现有的系统消息，或 `None`。
-        text: 要追加到系统消息中的文本。
-
-    Returns:
-        追加文本后的新 `SystemMessage`。
-    """
-    new_content: list[ContentBlock] = list(system_message.content_blocks) if system_message else []
-    if new_content:
-        text = f"\n\n{text}"
-    new_content.append({"type": "text", "text": text})
-    return SystemMessage(content_blocks=new_content)

@@ -1,5 +1,5 @@
 [project]
-name = "multi-agent-1"
+name = "multi_agent_1"
 version = "0.1.0"
 description = "A simple multi-agent collaboration demo based on LangChain and LangGraph"
 readme = "README.md"
