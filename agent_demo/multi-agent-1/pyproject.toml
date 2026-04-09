@@ -1,0 +1,20 @@
+[project]
+name = "multi-agent-1"
+version = "0.1.0"
+description = "A simple multi-agent collaboration demo based on LangChain and LangGraph"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "langchain",
+  "langgraph",
+  "pydantic",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest",
+]
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"

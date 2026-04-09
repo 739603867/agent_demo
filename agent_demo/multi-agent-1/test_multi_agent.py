@@ -29,5 +29,6 @@ my_multi_agent = create_agent(
 config = RunnableConfig(configurable={"thread_id": "test-multi-agent1"})
 
 ret = my_multi_agent.invoke(dict(messages=[HumanMessage('咨询python中 async的语法')]), config=config)
-print(json.dumps(messages_to_dict(ret['messages']), ensure_ascii=False, indent=2))
+for msg in ret["messages"]:
+    msg.pretty_print()
 
