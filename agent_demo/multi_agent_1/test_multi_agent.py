@@ -30,6 +30,46 @@ my_multi_agent = create_agent(
 
 config = RunnableConfig(configurable={"thread_id": "test-multi-agent1"})
 
-ret = my_multi_agent.invoke(dict(messages=[HumanMessage('帮我检查一下agent_demo/multi_agent_1/backend/protocol.py中的代码是否有问题')]), config=config)
-for msg in ret["messages"]:
-    msg.pretty_print()
+
+def invoke_agent(user_input: str):
+    return my_multi_agent.invoke(
+        dict(messages=[HumanMessage(user_input)]),
+        config=config,
+    )
+
+
+def print_agent_messages(messages) -> None:
+    for msg in messages:
+        msg.pretty_print()
+
+
+def run_console() -> None:
+    print("Multi-agent console started. Type your question.")
+    print("Type 'exit' or 'quit' to leave. Press Ctrl+C to exit anytime.")
+
+    while True:
+        try:
+            user_input = input("you> ").strip()
+        except EOFError:
+            print("\nConsole closed.")
+            break
+        except KeyboardInterrupt:
+            print("\nConsole interrupted. Bye.")
+            break
+
+        if not user_input:
+            continue
+
+        if user_input.lower() in {"exit", "quit"}:
+            print("Bye.")
+            break
+
+        try:
+            result = invoke_agent(user_input)
+            print_agent_messages(result["messages"])
+        except Exception as exc:
+            print(f"[agent error] {exc}")
+
+
+if __name__ == "__main__":
+    run_console()
